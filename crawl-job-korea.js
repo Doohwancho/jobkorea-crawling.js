@@ -98,9 +98,9 @@ const getJobIteratePages = async(keyword) => {
     });
 }
 
-const main = async(keyword, pages, sparetime) => {
+const main = async(keyword, sparetime = 7, pages = 15) => {
     initializer(pages, sparetime);
     getJobIteratePages(keyword);
 }
 
-main('spring', 1, 3); //keyword, pages, deadline
+main('spring', 1); //keyword, deadline day starting from today, pages to crawl(optional)
