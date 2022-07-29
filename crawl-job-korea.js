@@ -43,9 +43,10 @@ const parsing = (page) => {
         const region = $(node).find('.long:eq(0)').text().trim();
         const dueDate = $(node).find('.date:eq(0)').text().trim();
         const etc = $(node).find('.etc:eq(0)').text().trim();
+        const href = `https://www.jobkorea.co.kr${$(node).find('.post-list-info > a').attr('href')}`;
 
         jobs.push({
-            jobTitle, company, experience, education, regularYN, region, dueDate, etc
+            jobTitle, company, experience, education, regularYN, region, dueDate, etc, href
         });
     })
 
