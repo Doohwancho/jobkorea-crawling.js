@@ -1,8 +1,7 @@
 const axios = require('axios'); //to crawl html page
 const cheerio = require('cheerio'); //light version of jquery
 
-const jobs = [];
-let deadline;
+const global = {};
 
 const initializer = (pages, sparetime) => {
     initializeJobsArray(pages);
@@ -10,14 +9,18 @@ const initializer = (pages, sparetime) => {
 }
 
 const initializeJobsArray = (pages) => {
+    const jobs = [];
     for(let i = 0; i < pages; i++){
         jobs.push(`https://www.jobkorea.co.kr/Search/?stext=`);
     }
+    global.jobs = jobs;
 }
 
 const initializeDeadline = (sparetime) => {
-    deadline = new Date();
+    let deadline = new Date();
     deadline.setDate(deadline.getDate()+sparetime);
+
+    global.deadline = deadline;
 }
 
 const getHTML = async(url, keyword) => {
@@ -45,12 +48,12 @@ const parsing = (page) => {
         const etc = $(node).find('.etc:eq(0)').text().trim();
         const href = `https://www.jobkorea.co.kr${$(node).find('.post-list-info > a').attr('href')}`;
 
-        jobs.push({
+        global.jobs.push({
             jobTitle, company, experience, education, regularYN, region, dueDate, etc, href
         });
     })
 
-    return jobs;
+    return global.jobs;
 }
 
 const dateRegex = (date) => {
@@ -74,7 +77,7 @@ const filterDueDate = (x) => {
             const targetDate = regexFormatToDateFormat(regexed[0].split('/'));
             const today = new Date();
         
-            return (targetDate - today > 0) && (deadline - targetDate > 0);   
+            return (targetDate - today > 0) && (global.deadline - targetDate > 0);   
         }
     }
 }
@@ -85,7 +88,7 @@ const getJobEachPage = async(url, keyword) => {
 
 
 const getJobIteratePages = async(keyword) => {
-    const promises = jobs.map(url => getJobEachPage(url, keyword));
+    const promises = global.jobs.map(url => getJobEachPage(url, keyword));
     await Promise.all(promises).then(async (arr) => {
         return arr[0].filter(filterDueDate);
     })
