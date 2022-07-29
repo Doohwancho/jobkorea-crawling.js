@@ -2,16 +2,29 @@ const axios = require('axios'); //to crawl html page
 const cheerio = require('cheerio'); //light version of jquery
 
 const jobs = [];
+let deadline;
 
-const initializeMap = (pages) => {
+const initializer = (pages, sparetime) => {
+    initializeJobsArray(pages);
+    initializeDeadline(sparetime);
+}
+
+const initializeJobsArray = (pages) => {
     for(let i = 0; i < pages; i++){
         jobs.push(`https://www.jobkorea.co.kr/Search/?stext=`);
     }
 }
 
+const initializeDeadline = (sparetime) => {
+    deadline = new Date();
+    deadline.setDate(deadline.getDate()+sparetime);
+}
+
 const getHTML = async(url, keyword) => {
     try { 
-        const html = (await axios.get(url+encodeURI(keyword)+'&careerType=1%2C4')).data; //tip! await을 ()한번 더 감싸기!
+        //tip! await을 ()한번 더 감싸기!
+        //&careerType=1%2C4 for 신입 + 경력 무관
+        const html = (await axios.get(url+encodeURI(keyword)+'&careerType=1%2C4')).data; 
         return html
     } catch(e) {
         console.log(e);
@@ -39,6 +52,31 @@ const parsing = (page) => {
     return jobs;
 }
 
+const dateRegex = (date) => {
+    const regex = /(\d{2}.\d+)/g;
+    return date.match(regex);
+}
+
+const regexFormatToDateFormat = (monthAndDate) => {
+    let dueDate = new Date();
+    dueDate.setMonth(monthAndDate[0]-1);
+    dueDate.setDate(monthAndDate[1]);
+    dueDate.setHours(23);
+    dueDate.setMinutes(59);
+    return dueDate;
+}
+
+const filterDueDate = (x) => {
+    if(typeof x !== 'string'){
+        const regexed = dateRegex(x.dueDate);
+        if(regexed !== null){
+            const targetDate = regexFormatToDateFormat(regexed[0].split('/'));
+            const today = new Date();
+        
+            return (targetDate - today > 0) && (deadline - targetDate > 0);   
+        }
+    }
+}
 
 const getJobEachPage = async(url, keyword) => {
     return await getHTML(url, keyword).then((html) => parsing(html));
@@ -47,15 +85,18 @@ const getJobEachPage = async(url, keyword) => {
 
 const getJobIteratePages = async(keyword) => {
     const promises = jobs.map(url => getJobEachPage(url, keyword));
-    await Promise.all(promises);
-    console.log(jobs);
-    console.log(`total number of job offers: ${jobs.length}`);
+    await Promise.all(promises).then(async (arr) => {
+        return arr[0].filter(filterDueDate);
+    })
+    .then(rst => {
+        console.log(rst);
+        console.log(`total offer number: ${rst.length}`);
+    });
 }
 
-const main = async(keyword, pages) => {
-    initializeMap(pages);
+const main = async(keyword, pages, sparetime) => {
+    initializer(pages, sparetime);
     getJobIteratePages(keyword);
 }
 
-main('node', 2);
-
+main('spring', 1, 3); //keyword, pages, deadline
