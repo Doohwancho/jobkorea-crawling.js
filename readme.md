@@ -14,3 +14,11 @@ job korea에 검색 조건 중에,\
 # credit
 개발자의 품격
 https://www.youtube.com/watch?app=desktop&v=yaeZ17QYxVs
+
+
+# Todo
+1. fix: filter duplicates by 'jobTitle'
+2. refactor: anti pattern- stop use object as database. use set instead
+3. feat: executable command line 
+4. feat: javascript -> typescript
+5. feat: jsodocs

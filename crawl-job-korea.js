@@ -103,4 +103,4 @@ const main = async(keyword, sparetime = 7, pages = 15) => {
     getJobIteratePages(keyword);
 }
 
-main('spring', 1); //keyword, deadline day starting from today, pages to crawl(optional)
+main('개발자', 1); //keyword, deadline day starting from today, pages to crawl(optional)
