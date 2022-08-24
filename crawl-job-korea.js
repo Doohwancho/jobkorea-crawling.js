@@ -1,11 +1,60 @@
+/* dependency */
 const axios = require('axios'); //to crawl html page
 const cheerio = require('cheerio'); //light version of jquery
 
+/* util */
+HashMap = function() {
+    this.map = new Array();
+};
+
+HashMap.prototype = {
+    put : function(key, value){
+        this.map[key] = value;
+    },
+    get : function(key){
+        return this.map[key];
+    },
+    getAll : function(){
+        return this.map;
+    },
+    clear : function(){
+        this.map = new Array();
+    },
+    getKeys : function(){
+        let keys = new Array();
+
+        for(i in this.map){
+            keys.push(i);
+        }
+        return keys;
+    },
+    length : function(){
+        let count = 0;
+
+        for(i in this.map){
+            count++;
+        } 
+        return count;
+    },
+    customFilter : function(fn){
+        let filtered = new HashMap();
+
+        for (i in this.map) {
+          if (fn(this.map[i])) {
+            filtered.put(i, this.map[i]);
+          }
+        }
+        return filtered;
+    }
+}
+
+/* initialize */
 const global = {};
 
 const initializer = (pages, sparetime) => {
     initializeJobsArray(pages);
     initializeDeadline(sparetime);
+    initializeDatabase();
 }
 
 const initializeJobsArray = (pages) => {
@@ -23,6 +72,13 @@ const initializeDeadline = (sparetime) => {
     global.deadline = deadline;
 }
 
+const initializeDatabase = () => {
+    let hashMap = new HashMap();
+    global.db = hashMap;
+}
+
+
+/* function */
 const getHTML = async(url, keyword) => {
     try { 
         //tip! await을 ()한번 더 감싸기!
@@ -48,12 +104,22 @@ const parsing = (page) => {
         const etc = $(node).find('.etc:eq(0)').text().trim();
         const href = `https://www.jobkorea.co.kr${$(node).find('.post-list-info > a').attr('href')}`;
 
-        global.jobs.push({
-            jobTitle, company, experience, education, regularYN, region, dueDate, etc, href
-        });
+        global.db.put(
+            jobTitle, 
+            {
+                jobTitle, 
+                company, 
+                experience, 
+                education, 
+                regularYN, 
+                region, 
+                dueDate, 
+                etc, 
+                href
+            });
     })
 
-    return global.jobs;
+    return global.db;
 }
 
 const dateRegex = (date) => {
@@ -86,15 +152,15 @@ const getJobEachPage = async(url, keyword) => {
     return await getHTML(url, keyword).then((html) => parsing(html));
 }
 
-
 const getJobIteratePages = async(keyword) => {
     const promises = global.jobs.map(url => getJobEachPage(url, keyword));
-    await Promise.all(promises).then(async (arr) => {
-        return arr[0].filter(filterDueDate);
+    await Promise.all(promises)
+    .then(() => {
+        return global.db.customFilter(filterDueDate);
     })
-    .then(rst => {
-        console.log(rst);
-        console.log(`total offer number: ${rst.length}`);
+    .then(result => {
+        console.log(result.getAll());
+        console.log(`total offer number: ${result.length()}`);
     });
 }
 
@@ -103,4 +169,4 @@ const main = async(keyword, sparetime = 7, pages = 15) => {
     getJobIteratePages(keyword);
 }
 
-main('개발자', 1); //keyword, deadline day starting from today, pages to crawl(optional)
+main('스프링 개발자', 2); //keyword, deadline day starting from today, pages to crawl(optional)

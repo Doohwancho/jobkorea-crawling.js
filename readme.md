@@ -17,8 +17,8 @@ https://www.youtube.com/watch?app=desktop&v=yaeZ17QYxVs
 
 
 # Todo
-1. fix: filter duplicates by 'jobTitle'
-2. refactor: anti pattern- stop use object as database. use set instead
+1. fix: filter duplicates by 'jobTitle' -- clear
+2. refactor: anti pattern - stop use object as database. use set instead -- clear
 3. feat: executable command line 
 4. feat: javascript -> typescript
 5. feat: jsodocs
