@@ -7,9 +7,13 @@ job korea에 검색 조건 중에,\
 # How to use it?
 1. git clone https://github.com/Doohwancho/jobkorea-crawling.nodejs
 2. npm install
-3. crawl-job.korea.js의 main() 파라미터에 원하는 검색 조건 입력
-4. node crawl-job-korea.js
+3. node crawl-job-korea.js ${keyword} ${deadline}
 
+Example
+
+> node crawl-job-korea.js 라즈베리파이 7
+
+-> 라즈베리파이로 검색 후, 채용 마감일이 7일 이내이거나 상시채용인 회사 리스트 출력
 
 # credit
 개발자의 품격
@@ -22,6 +26,6 @@ https://www.youtube.com/watch?app=desktop&v=yaeZ17QYxVs
 3. fix: 연관 없는 추천회사가 결과에 포함되던 버그 수정 -- clear
 4. refactor: util function modularize -- clear
 5. fix: 상시채용 filter되는 버그 -- clear
-6. feat: executable command line 
+6. feat: executable command line -- clear
 7. feat: javascript -> typescript
 8. feat: jsodocs

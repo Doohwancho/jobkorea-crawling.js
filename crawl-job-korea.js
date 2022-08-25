@@ -7,9 +7,9 @@ const HashMap = require('./custom_stl.js');
 /* initialize */
 const global = {};
 
-const initializer = (pages, sparetime) => {
+const initializer = (pages, deadline) => {
     initializeJobsArray(pages);
-    initializeDeadline(sparetime);
+    initializeDeadline(deadline);
     initializeDatabase();
 }
 
@@ -23,7 +23,7 @@ const initializeJobsArray = (pages) => {
 
 const initializeDeadline = (sparetime) => {
     let deadline = new Date();
-    deadline.setDate(deadline.getDate()+sparetime);
+    deadline.setDate(deadline.getDate()+Number(sparetime));
 
     global.deadline = deadline;
 }
@@ -121,10 +121,13 @@ const getJobIteratePages = async(keyword) => {
     });
 }
 
-const main = async(keyword, sparetime = 7, pages = 1) => {
-    initializer(pages, sparetime);
+const main = async([keyword, deadline = 7, pages = 10]) => {
+    console.log(deadline);
+    initializer(pages, deadline);
     getJobIteratePages(keyword);
 }
 
-main('라즈베리파이', 100, 2); //keyword, deadline day starting from today, pages to crawl(optional)
+let argv = process.argv.slice(2);
+main(argv);
+
 
