@@ -27,5 +27,6 @@ https://www.youtube.com/watch?app=desktop&v=yaeZ17QYxVs
 4. refactor: util function modularize -- clear
 5. fix: 상시채용 filter되는 버그 -- clear
 6. feat: executable command line -- clear
-7. feat: javascript -> typescript
-8. feat: jsodocs
+7. feat: sort by dueDate desc -- clear
+8. feat: javascript -> typescript
+9. feat: jsodocs

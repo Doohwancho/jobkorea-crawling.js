@@ -41,7 +41,8 @@ const getHTML = async(url, index, keyword) => {
         //&careerType=1%2C4 - 신입 + 경력 무관
         //&tabType=recruit - given by default
         //&Page_No - page number to crawl multiple pages
-        const html = (await axios.get(url+encodeURI(keyword)+`&careerType=1%2C4&tabType=recruit&Page_No=${index+1}`)).data; 
+        //&Ord=ApplyCloseDtAsc - 마감임박순
+        const html = (await axios.get(url+encodeURI(keyword)+`&careerType=1%2C4&tabType=recruit&Ord=ApplyCloseDtAsc&Page_No=${index+1}`)).data; 
         return html
     } catch(e) {
         console.log(e);
