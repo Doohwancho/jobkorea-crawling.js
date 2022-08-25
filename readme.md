@@ -22,7 +22,7 @@ https://www.youtube.com/watch?app=desktop&v=yaeZ17QYxVs
 
 # Todo
 1. fix: filter duplicates by 'jobTitle' -- clear
-2. refactor: anti pattern - stop use object as database. use set instead -- clear
+2. refactor: anti pattern - stop use object as database. use map instead -- clear
 3. fix: 연관 없는 추천회사가 결과에 포함되던 버그 수정 -- clear
 4. refactor: util function modularize -- clear
 5. fix: 상시채용 filter되는 버그 -- clear
