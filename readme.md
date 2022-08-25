@@ -7,7 +7,7 @@ job korea에 검색 조건 중에,\
 # How to use it?
 1. git clone https://github.com/Doohwancho/jobkorea-crawling.nodejs
 2. npm install
-3. node main.js ${keyword} ${deadline}
+3. node main.js {keyword} {deadline}
 
 Example
 
