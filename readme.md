@@ -11,7 +11,7 @@ job korea에 검색 조건 중에,\
 
 Example
 
-> node crawl-job-korea.js 라즈베리파이 7
+> node main.js 라즈베리파이 7
 
 -> 라즈베리파이로 검색 후, 채용 마감일이 7일 이내이거나 상시채용인 회사 리스트 출력
 
@@ -28,5 +28,6 @@ https://www.youtube.com/watch?app=desktop&v=yaeZ17QYxVs
 5. fix: 상시채용 filter되는 버그 -- clear
 6. feat: executable command line -- clear
 7. feat: sort by dueDate desc -- clear
-8. feat: javascript -> typescript
+8. refactor: modularize -- clear
 9. feat: jsodocs
+10. feat: javascript -> typescript
