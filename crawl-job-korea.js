@@ -95,6 +95,7 @@ const regexFormatToDateFormat = (monthAndDate) => {
 
 const filterDueDate = (x) => {
     if(typeof x !== 'string'){
+        if(x.dueDate === '상시채용') return true;
         const regexed = dateRegex(x.dueDate);
         if(regexed !== null){     
             const targetDate = regexFormatToDateFormat(regexed[0].split('/'));
@@ -125,7 +126,5 @@ const main = async(keyword, sparetime = 7, pages = 1) => {
     getJobIteratePages(keyword);
 }
 
-main('라즈베리파이', 7, 2); //keyword, deadline day starting from today, pages to crawl(optional)
-
-
+main('라즈베리파이', 100, 2); //keyword, deadline day starting from today, pages to crawl(optional)
 
