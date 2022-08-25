@@ -11,15 +11,16 @@ const { global } = require('./init');
  * @param { string } url 
  * @param { number } index 
  * @param { string } keyword 
+ * @property { Promise } html
+*       - tip! await을 ()한번 더 감싸기!   
+        - &careerType=1%2C4 - 신입 + 경력 무관   
+        - &tabType=recruit - given by default
+        - &Page_No - page number to crawl multiple pages
+        - &Ord=ApplyCloseDtAsc - 마감임박순
  * @returns { Promise }
  */
 const getHTML = async(url, index, keyword) => {
     try { 
-        //tip! await을 ()한번 더 감싸기!
-        //&careerType=1%2C4 - 신입 + 경력 무관
-        //&tabType=recruit - given by default
-        //&Page_No - page number to crawl multiple pages
-        //&Ord=ApplyCloseDtAsc - 마감임박순
         const html = (await axios.get(url+encodeURI(keyword)+`&careerType=1%2C4&tabType=recruit&Ord=ApplyCloseDtAsc&Page_No=${index+1}`)).data; 
         return html
     } catch(e) {
