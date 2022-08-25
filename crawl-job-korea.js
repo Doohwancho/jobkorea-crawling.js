@@ -1,52 +1,8 @@
 /* dependency */
 const axios = require('axios'); //to crawl html page
 const cheerio = require('cheerio'); //light version of jquery
+const HashMap = require('./custom_stl.js');
 
-/* util */
-HashMap = function() {
-    this.map = new Array();
-};
-
-HashMap.prototype = {
-    put : function(key, value){
-        this.map[key] = value;
-    },
-    get : function(key){
-        return this.map[key];
-    },
-    getAll : function(){
-        return this.map;
-    },
-    clear : function(){
-        this.map = new Array();
-    },
-    getKeys : function(){
-        let keys = new Array();
-
-        for(i in this.map){
-            keys.push(i);
-        }
-        return keys;
-    },
-    length : function(){
-        let count = 0;
-
-        for(i in this.map){
-            count++;
-        } 
-        return count;
-    },
-    customFilter : function(fn){
-        let filtered = new HashMap();
-
-        for (i in this.map) {
-          if (fn(this.map[i])) {
-            filtered.put(i, this.map[i]);
-          }
-        }
-        return filtered;
-    }
-}
 
 /* initialize */
 const global = {};
@@ -85,8 +41,7 @@ const getHTML = async(url, index, keyword) => {
         //&careerType=1%2C4 - 신입 + 경력 무관
         //&tabType=recruit - given by default
         //&Page_No - page number to crawl multiple pages
-        console.log(url+encodeURI(keyword)+`&careerType=1%2C4&tabType=recruit&Page_No=${index+1}`);
-        const html = (await axios.get(url+encodeURI(keyword)+`&Page_No=${index+1}`)).data; 
+        const html = (await axios.get(url+encodeURI(keyword)+`&careerType=1%2C4&tabType=recruit&Page_No=${index+1}`)).data; 
         return html
     } catch(e) {
         console.log(e);
@@ -141,11 +96,10 @@ const regexFormatToDateFormat = (monthAndDate) => {
 const filterDueDate = (x) => {
     if(typeof x !== 'string'){
         const regexed = dateRegex(x.dueDate);
-        if(regexed !== null){
+        if(regexed !== null){     
             const targetDate = regexFormatToDateFormat(regexed[0].split('/'));
-            const today = new Date();
-        
-            return (targetDate - today > 0) && (global.deadline - targetDate > 0);   
+            const today = new Date(); 
+            return ((targetDate - today > 0) && (global.deadline - targetDate > 0));   
         }
     }
 }
@@ -171,4 +125,7 @@ const main = async(keyword, sparetime = 7, pages = 1) => {
     getJobIteratePages(keyword);
 }
 
-main('라즈베리파이', 3, 5); //keyword, deadline day starting from today, pages to crawl(optional)
+main('라즈베리파이', 7, 2); //keyword, deadline day starting from today, pages to crawl(optional)
+
+
+
