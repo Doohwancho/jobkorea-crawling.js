@@ -79,11 +79,14 @@ const initializeDatabase = () => {
 
 
 /* function */
-const getHTML = async(url, keyword) => {
+const getHTML = async(url, index, keyword) => {
     try { 
         //tip! await을 ()한번 더 감싸기!
-        //&careerType=1%2C4 for 신입 + 경력 무관
-        const html = (await axios.get(url+encodeURI(keyword)+'&careerType=1%2C4')).data; 
+        //&careerType=1%2C4 - 신입 + 경력 무관
+        //&tabType=recruit - given by default
+        //&Page_No - page number to crawl multiple pages
+        console.log(url+encodeURI(keyword)+`&careerType=1%2C4&tabType=recruit&Page_No=${index+1}`);
+        const html = (await axios.get(url+encodeURI(keyword)+`&Page_No=${index+1}`)).data; 
         return html
     } catch(e) {
         console.log(e);
@@ -92,7 +95,7 @@ const getHTML = async(url, keyword) => {
 
 const parsing = (page) => {
     const $ = cheerio.load(page);
-    const $jobList = $('.post');
+    const $jobList = $('.list-default .post');
     $jobList.each((idx, node) => {
         const jobTitle = $(node).find('.title:eq(0)').text().trim();
         const company = $(node).find('.name:eq(0)').text().trim();
@@ -106,8 +109,7 @@ const parsing = (page) => {
 
         global.db.put(
             jobTitle, 
-            {
-                jobTitle, 
+            { 
                 company, 
                 experience, 
                 education, 
@@ -148,12 +150,12 @@ const filterDueDate = (x) => {
     }
 }
 
-const getJobEachPage = async(url, keyword) => {
-    return await getHTML(url, keyword).then((html) => parsing(html));
+const getJobEachPage = async(url, index, keyword) => {
+    return await getHTML(url, index, keyword).then((html) => parsing(html));
 }
 
 const getJobIteratePages = async(keyword) => {
-    const promises = global.jobs.map(url => getJobEachPage(url, keyword));
+    const promises = global.jobs.map((url, index) => getJobEachPage(url, index, keyword));
     await Promise.all(promises)
     .then(() => {
         return global.db.customFilter(filterDueDate);
@@ -164,9 +166,9 @@ const getJobIteratePages = async(keyword) => {
     });
 }
 
-const main = async(keyword, sparetime = 7, pages = 15) => {
+const main = async(keyword, sparetime = 7, pages = 1) => {
     initializer(pages, sparetime);
     getJobIteratePages(keyword);
 }
 
-main('스프링 개발자', 2); //keyword, deadline day starting from today, pages to crawl(optional)
+main('라즈베리파이', 3, 5); //keyword, deadline day starting from today, pages to crawl(optional)
