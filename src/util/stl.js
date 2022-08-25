@@ -31,7 +31,7 @@ HashMap.prototype = {
         } 
         return count;
     },
-    customFilter : function(fn){
+    filter : function(fn){
         let filtered = new HashMap();
 
         for (let i in this.map) {

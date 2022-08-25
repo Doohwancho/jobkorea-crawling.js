@@ -7,7 +7,7 @@ job korea에 검색 조건 중에,\
 # How to use it?
 1. git clone https://github.com/Doohwancho/jobkorea-crawling.nodejs
 2. npm install
-3. node crawl-job-korea.js ${keyword} ${deadline}
+3. node main.js ${keyword} ${deadline}
 
 Example
 
@@ -29,5 +29,5 @@ https://www.youtube.com/watch?app=desktop&v=yaeZ17QYxVs
 6. feat: executable command line -- clear
 7. feat: sort by dueDate desc -- clear
 8. refactor: modularize -- clear
-9. feat: jsodocs
+9. feat: jsdocs -- clear
 10. feat: javascript -> typescript

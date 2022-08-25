@@ -1,12 +1,18 @@
 const axios = require('axios'); //to crawl html page
 const cheerio = require('cheerio'); //light version of jquery
 
-const { filterDueDate  } = require('./util/util_time'); 
+const { FnDueDate } = require('./util/time'); 
 const { global } = require('./init');
 
 
 
-
+/**
+ * crawl html page
+ * @param { string } url 
+ * @param { number } index 
+ * @param { string } keyword 
+ * @returns { Promise }
+ */
 const getHTML = async(url, index, keyword) => {
     try { 
         //tip! await을 ()한번 더 감싸기!
@@ -20,6 +26,12 @@ const getHTML = async(url, index, keyword) => {
         console.log(e);
     }
 }
+
+/**
+ * parse html page and get target informations
+ * @param { string } page 
+ * @returns { Promise }
+ */
 
 const parsing = (page) => {
     const $ = cheerio.load(page);
@@ -53,15 +65,25 @@ const parsing = (page) => {
     return global.db;
 }
 
-const getJobEachPage = async(url, index, keyword) => {
+/**
+ * @param { string } url 
+ * @param { number } index 
+ * @param { string } keyword 
+ * @returns { Promise }
+ */
+const crawlEachPage = async(url, index, keyword) => {
     return await getHTML(url, index, keyword).then((html) => parsing(html));
 }
-
-const getJobIteratePages = async(keyword) => { 
-    const promises = global.jobs.map((url, index) => getJobEachPage(url, index, keyword));
+/**
+ * crawl job korea with keyword, deadline,
+ * and show the final results
+ * @param { string } keyword 
+ */
+const crawlPages = async(keyword) => { 
+    const promises = global.jobs.map((url, index) => crawlEachPage(url, index, keyword));
     await Promise.all(promises)
     .then(() => {
-        return global.db.customFilter(filterDueDate);
+        return global.db.filter(FnDueDate);
     })
     .then(result => {
         console.log(result.getAll());
@@ -70,5 +92,5 @@ const getJobIteratePages = async(keyword) => {
 }
 
 module.exports = {
-    getJobIteratePages
+    crawlPages
 }
