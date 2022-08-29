@@ -17,10 +17,10 @@ import { errorParameterNone } from './error';
  * @param { string[] } argv 
  * @returns { Boolean }
  */
-export const parseArgs = (argv: string[]) => {
-    if(argv == undefined) errorParameterNone();
+export const parseArgs = (argv?: string[]) => {
+    if(argv === undefined || argv === null) errorParameterNone();
     
-    return argv.slice(2, 5).map(str => {
+    return argv!.slice(2, 5).map(str => {
         if(isNumber(str))
         return Number(str)
     });
