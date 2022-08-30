@@ -30,5 +30,4 @@ https://www.youtube.com/watch?app=desktop&v=yaeZ17QYxVs
 7. feat: sort by dueDate desc -- clear
 8. refactor: modularize -- clear
 9. feat: jsdocs -- clear
-10. refactor: closure로 export되는 함수 외의 것들 숨기기
-11. feat: javascript -> typescript
+10. feat: javascript -> typescript
